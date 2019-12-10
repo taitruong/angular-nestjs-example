@@ -51,6 +51,21 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="save">
+      <th mat-header-cell *matHeaderCellDef>Save</th>
+      <td mat-cell *matCellDef="let element" [formGroup]="element">
+        <button
+          data-testid="copyGermanLocale"
+          mat-raised-button
+          color="primary"
+          (click)="save(element)"
+          [disabled]="!element.valid"
+        >
+          {{!!element.value.id ? 'Update' : 'Create'}}
+        </button>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>

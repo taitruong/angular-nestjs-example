@@ -4,9 +4,11 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 
 const ELEMENT_DATA: User[] = [
-  {firstName: '', lastName: '', email: ''},
-  {firstName: 'John', lastName: 'Doe', email: 'john.doe@acme.com'},
-  {firstName: 'Alan', lastName: 'Smithee', email: 'alan.smithee@example.com'},
+  { firstName: '', lastName: '', email: '' },
+  { id: 1, firstName: 'John', lastName: 'Doe', email: 'john.doe@acme.com' },
+  {
+    id: 2, firstName: 'Alan', lastName: 'Smithee', email: 'alan.smithee@example.com'
+  }
 ];
 
 @Component({
@@ -15,29 +17,49 @@ const ELEMENT_DATA: User[] = [
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-
-  displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email'];
+  idCount = 3;
+  displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'save'];
   dataSource: MatTableDataSource<FormGroup>;
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.initForm();
+  }
+
+  initForm() {
     const userFormGroups = ELEMENT_DATA.map(user => {
-      return fb.group({
+      return this.fb.group({
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email
       });
     });
-    console.log('>>>> form', this.form);
-    this.form = fb.group({
-      users: fb.array(userFormGroups)
+    this.form = this.fb.group({
+      users: this.fb.array(userFormGroups)
     });
     this.dataSource = new MatTableDataSource(userFormGroups);
   }
 
-  ngOnInit() {
+  save(element: FormGroup) {
+    console.log('Saving', element.value);
+    const user = element.value as User;
+    let entity: User;
+    if (!!user.id) {
+      // update
+      entity = ELEMENT_DATA.find(u => u.id === user.id);
+    } else {
+      entity = new User();
+      entity.id = this.idCount;
+      this.idCount++;
+      ELEMENT_DATA.push(entity);
+    }
+    entity.email = user.email;
+    entity.firstName = user.firstName;
+    entity.lastName = user.lastName;
+    this.initForm();
   }
-
 }
