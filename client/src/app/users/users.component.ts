@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit, OnChanges } from '@angular/core';
 import { User } from './user.model';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 
 const ELEMENT_DATA: User[] = [
@@ -33,9 +33,9 @@ export class UsersComponent implements OnInit {
     const userFormGroups = ELEMENT_DATA.map(user => {
       return this.fb.group({
         id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email
+        firstName: this.fb.control(user.firstName, {validators: [Validators.required]}),
+        lastName: this.fb.control(user.lastName, {validators: [Validators.required]}),
+        email: this.fb.control(user.email, {validators: [Validators.required]}),
       });
     });
     this.form = this.fb.group({
