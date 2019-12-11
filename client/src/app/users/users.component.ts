@@ -45,7 +45,6 @@ export class UsersComponent implements OnInit {
   }
 
   save(element: FormGroup) {
-    console.log('Saving', element.value);
     const user = element.value as User;
     let entity: User;
     if (!!user.id) {
