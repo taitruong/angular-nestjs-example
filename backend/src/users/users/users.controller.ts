@@ -19,9 +19,8 @@ export class UsersController {
     return this.service.find();
   }
 
-  @Get()
+  @Get(':id')
   findOne(
-    @Param(':id')
     id: number,
   ) {
     return this.service.findOne(id);
@@ -35,7 +34,7 @@ export class UsersController {
     return this.service.save(user);
   }
 
-  @Put()
+  @Put(':id')
   update(
     @Body()
     user: User,

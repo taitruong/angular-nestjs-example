@@ -58,7 +58,7 @@
           data-testid="copyGermanLocale"
           mat-raised-button
           color="primary"
-          (click)="save(element)"
+          (click)="save(element.value)"
           [disabled]="!element.valid"
         >
           {{!!element.value.id ? 'Update' : 'Create'}}

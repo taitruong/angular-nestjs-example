@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material';
@@ -14,6 +15,7 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
