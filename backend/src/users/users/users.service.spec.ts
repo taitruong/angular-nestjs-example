@@ -1,41 +1,37 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Connection, createConnection } from 'typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from './../user.entity';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;
 
-  let connection: Connection;
-
   beforeAll(async () => {
-    connection = await createConnection({
-      type: 'sqlite',
-      database: ':memory:',
-      dropSchema: true,
-      entities: [User],
-      synchronize: true,
-      logging: false,
-    });
-    const repo = connection.getRepository(User);
-
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        {
-          provide: getRepositoryToken(User),
-          useValue: repo,
-        },
+      imports: [
+        // TODO: use ormconfig.json
+        TypeOrmModule.forRoot({
+          type: 'sqlite',
+          database: ':memory:',
+          entities: [__dirname + '../../**/*.entity{.ts,.js}'],
+          synchronize: true,
+        }),
+        TypeOrmModule.forFeature([User]),
       ],
+      providers: [UsersService],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
     expect(service).toBeDefined();
+    const repo = module.get<Repository<User>>(getRepositoryToken(User));
+    expect(repo).toBeDefined();
   });
 
-  afterAll(() => {
-    connection.close();
+  beforeEach(async () => {
+    const result = await service.find();
+    result.forEach(entity => service.delete(entity.id));
+    await service.initData();
   });
 
   it('create entity', async () => {
@@ -45,5 +41,11 @@ describe('UsersService', () => {
     user.email = 'email';
     const result = await service.save(user);
     expect(service.findOne(result.id)).toBeDefined();
+  });
+
+  it('find all', async () => {
+    const result = await service.find();
+    expect(result).toBeDefined();
+    expect(result.length).toBeGreaterThanOrEqual(1);
   });
 });
