@@ -1,5 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
-import { User } from './user.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
@@ -19,7 +18,7 @@ describe('UsersComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ UsersComponent ],
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
