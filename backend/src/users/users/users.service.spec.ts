@@ -41,6 +41,22 @@ describe('UsersService', () => {
     user.email = 'email';
     const result = await service.save(user);
     expect(service.findOne(result.id)).toBeDefined();
+    expect(result.firstName).toEqual('first name');
+    expect(result.lastName).toEqual('last name');
+    expect(result.email).toEqual('email');
+  });
+
+  it('update entity', async () => {
+    const user = await service.findOne(1);
+    expect(user).toBeDefined();
+    user.firstName = 'first name - updated';
+    user.lastName = 'last name - updated';
+    user.email = 'email - updated';
+    await service.update(user);
+    const result = await service.findOne(1);
+    expect(result.firstName).toEqual('first name - updated');
+    expect(result.lastName).toEqual('last name - updated');
+    expect(result.email).toEqual('email - updated');
   });
 
   it('find all', async () => {
